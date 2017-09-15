@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GamaterSDK" default="proguard" >
+
+    <!--
+         The local.properties file is created and updated by the 'android' tool.
+         It contains the path to the SDK. It should *NOT* be checked into
+         Version Control Systems.
+    -->
+
+    <property file="local.properties" />
+
+    <property
+        name="aapt.ignore.assets"
+        value="!.svn:!.git:\x3Cdir\x3E_*:.*:!CVS:!thumbs.db:!picasa.ini:!*.scc:*~:crunch" />
+
+    <!--
+         The ant.properties file can be created by you. It is only edited by the
+         'android' tool to add properties to it.
+         This is the place to change some Ant specific build properties.
+         Here are some properties you may want to change/update:
+
+         source.dir
+             The name of the source directory. Default is 'src'.
+         out.dir
+             The name of the output directory. Default is 'bin'.
+
+         For other overridable properties, look at the beginning of the rules
+         files in the SDK, at tools/ant/build.xml
+
+         Properties related to the SDK location or the project target should
+         be updated using the 'android' tool with the 'update' action.
+
+         This file is an integral part of the build system for your
+         application and should be checked into Version Control Systems.
+    -->
+
+    <property file="ant.properties" />
+
+    <!--
+         if sdk.dir was not set from one of the property file, then
+         get it from the ANDROID_HOME env var.
+         This must be done before we load project.properties since
+         the proguard config can use sdk.dir
+    -->
+
+    <property environment="env" />
+
+    <condition
+        property="sdk.dir"
+        value="${env.ANDROID_HOME}" >
+
+        <isset property="env.ANDROID_HOME" />
+    </condition>
+
+    <!--
+         The project.properties file is created and updated by the 'android'
+         tool, as well as ADT.
+
+         This contains project specific properties such as project target, and library
+         dependencies. Lower level build properties are stored in ant.properties
+         (or in .classpath for Eclipse projects).
+
+         This file is an integral part of the build system for your
+         application and should be checked into Version Control Systems.
+    -->
+
+    <loadproperties srcFile="project.properties" />
+
+    <!-- quick check on sdk.dir -->
+
+    <fail
+        message="sdk.dir is missing. Make sure to generate local.properties using &apos;android update project&apos; or to inject it through the ANDROID_HOME environment variable."
+        unless="sdk.dir" />
+
+    <!--
+        Import per project custom build rules if present at the root of the project.
+        This is the place to put custom intermediary targets such as:
+            -pre-build
+            -pre-compile
+            -post-compile (This is typically used for code obfuscation.
+                           Compiled code location: ${out.classes.absolute.dir}
+                           If this is not done in place, override ${out.dex.input.absolute.dir})
+            -post-package
+            -post-build
+            -pre-clean
+    -->
+
+    <import
+        file="custom_rules.xml"
+        optional="true" />
+
+    <!--
+         Import the actual build file.
+
+         To customize existing targets, there are two options:
+         - Customize only one target:
+             - copy/paste the target into this file, *before* the
+               <import> task.
+             - customize it to your needs.
+         - Customize the whole content of build.xml
+             - copy/paste the content of the rules files (minus the top node)
+               into this file, replacing the <import> task.
+             - customize to your needs.
+
+         ***********************
+         ****** IMPORTANT ******
+         ***********************
+         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
+         in order to avoid having your file be overridden by tools such as "android update project"
+    -->
+    <!-- version-tag: 1 -->
+
+    <property
+        name="libs.dir"
+        value="libs" />
+
+    <property
+        name="out.dir"
+        value="bin" />
+
+    <property
+        name="src.dir"
+        value="src" />
+
+    <property
+        name="out.absolute.dir"
+        location="${out.dir}" />
+
+    <property
+        name="out.classes.absolute.dir"
+        location="${out.dir}/classes" />
+
+    <path id="libraries" >
+
+        <pathelement path="android-support-v4.jar" />
+    </path>
+
+    <target name="compile" >
+
+        <javac
+            classpathref="libraries"
+            destdir="${out.classes.absolute.dir}"
+            includeantruntime="on"
+            srcdir="${src.dir}" />
+    </target>
+
+    <target
+        name="jar"
+        depends="compile" >
+
+        <jar
+            basedir="${out.classes.absolute.dir}"
+            destfile="${out.dir}/gamatersdk.jar" />
+    </target>
+
+    <target name="proguard" >
+
+
+        <property
+            name="obfuscate.absolute.dir"
+            location="${out.absolute.dir}/proguard" />
+
+        <property
+            name="preobfuscate.jar.file"
+            value="${obfuscate.absolute.dir}/original.jar" />
+
+        <property
+            name="obfuscated.jar.file"
+            value="${obfuscate.absolute.dir}/gamatersdk.jar" />
+        <!-- input for dex will be proguard's output -->
+
+        <property
+            name="out.dex.input.absolute.dir"
+            value="${obfuscated.jar.file}" />
+
+        <!-- Add Proguard Tasks classpath="${proguard-home}/lib/proguard.jar" />-->
+        <property
+            name="proguard.jar"
+            location="${proguard-home}/lib/proguard.jar" />
+
+        <taskdef
+            name="proguard"
+            classname="proguard.ant.ProGuardTask"
+            classpath="${proguard.jar}" />
+
+        <mkdir dir="${obfuscate.absolute.dir}" />
+
+        <delete file="${preobfuscate.jar.file}" />
+
+        <delete file="${obfuscated.jar.file}" />
+
+        <jar
+            basedir="${out.classes.absolute.dir}"
+            destfile="${preobfuscate.jar.file}" />
+
+        <path id="proguard.configpath" >
+
+            <pathelement path="${proguard.config}" />
+        </path>
+
+        <pathconvert
+            pathsep="&quot; -include &quot;"
+            property="proguard.configcmd"
+            refid="proguard.configpath" />
+
+        <proguard>
+            -include      "${proguard.configcmd}"
+            -include      "${out.absolute.dir}/proguard.txt"
+            -injars       "${out.dir}/vstargamesdk_newui.jar"
+            -outjars      "${obfuscated.jar.file}"
+            -libraryjars  "libs/okio-1.4.0.jar"
+            -libraryjars  "libs/okhttp-2.4.0.jar"
+            -libraryjars  "${libs.dir}/android-support-v4.jar"
+			-libraryjars  "D:/Program Files/Java/jdk1.7.0_79/lib/dt.jar"
+            -libraryjars  "D:/workspace/google-play-services_lib/libs/google-play-services.jar"
+            -libraryjars  "libs/AF-Android-SDK-v2.3.1.18.jar"
+            -libraryjars  "libs/twitter4j-core-4.0.2.jar"
+            -libraryjars  "libs/twitter4j-media-support-4.0.2.jar"
+            -libraryjars  "libs/libammsdk.jar"
+            -libraryjars  "libs/bolts-android-1.1.2.jar"
+			-libraryjars  "${project.target.android.jar}"
+            -libraryjars  "libs/lite-orm-1.9.1.jar"
+            -libraryjars  "libs/GoogleConversionTrackingSdk-2.2.4.jar"
+			-dump         "${obfuscate.absolute.dir}/dump.txt"
+            -printseeds   "${obfuscate.absolute.dir}/seeds.txt"
+            -printusage   "${obfuscate.absolute.dir}/usage.txt"
+            -printmapping "${obfuscate.absolute.dir}/mapping.txt"
+        </proguard>
+    </target>
+
+</project>

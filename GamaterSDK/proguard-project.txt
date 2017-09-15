@@ -1,0 +1,191 @@
+# To enable ProGuard in your project, edit project.properties
+# to define the proguard.config property as described in that file.
+#
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in ${sdk.dir}/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-allowaccessmodification
+-dontpreverify
+ 
+-dontusemixedcaseclassnames
+-dontskipnonpubliclibraryclasses
+-verbose
+
+-keepattributes SourceFile,LineNumberTable
+ 
+-keepattributes *Annotation*
+
+-keepclassmembers class com.gamater.sdk.game.fragments.MVWebFragment$CopyInterface{
+	*;
+}
+
+-dontwarn android.network.**
+-keep public class android.network.**{
+	*;
+}
+
+-dontwarn com.buildthedot.paysbuylib.**
+-keep public class com.buildthedot.paysbuylib.**{
+	*;
+}
+
+-dontwarn com.litesuits.orm.LiteOrm
+-keep public class com.litesuits.orm.LiteOrm{
+	*;
+}
+
+-dontwarn com.mol.payment.**
+-keep public class com.mol.payment.**{
+	*;
+}
+
+-dontwarn com.google.ads.conversiontracking.AdWordsConversionReporter
+-keep public class com.google.ads.conversiontracking.AdWordsConversionReporter{
+	*;
+}
+ 
+-keepclasseswithmembernames class * { #保留native的方法的方法名和包含native方法的类的类名不变
+    native <methods>;
+}
+ 
+-keepclassmembers public class * extends android.view.View {#保留继承于View的类中set*和get*方法的方法名不变
+   void set*(***);
+   *** get*();
+   public <init>(android.content.Context);
+   public <init>(android.content.Context, android.util.AttributeSet);
+   public <init>(android.content.Context, android.util.AttributeSet, int);
+}
+ 
+-keepclassmembers class * extends android.app.Activity { #保留继承于Activity的类中以View为参数，返回值是void的方法的方法名
+   public void *(android.view.View);
+}
+
+-keep public class * extends android.content.BroadcastReceiver
+
+-keep public class * extends android.app.Service
+
+-keep public class * extends android.support.v4.app.FragmentActivity
+
+-keep class * extends com.mol.payment.PaymentListener
+
+-keep class * extends com.google.ads.conversiontracking.AdWordsConversionReporter
+ 
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+ 
+-keep class * implements android.os.Parcelable { #保留实现了Parcelable接口的类的类名以及Parcelable$Createor内部类的类名
+  public static final android.os.Parcelable$Creator *;
+}
+ 
+-keepclassmembers class **.R$* { #保留R$*类中静态字段的字段名
+    public static <fields>;
+}
+
+-keep class android.webkit.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.gamater.payment.iab.util.** {
+    <fields>;
+    <methods>;
+}
+
+
+-keep public class com.android.volley.** {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.gamater.define.PaymentParam {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.gamater.define.GPOrder {
+    public static <fields>;
+    public <methods>;
+}
+
+
+-keep public class com.gamater.payment.GamaterIABListener {
+	public <methods>;
+}
+
+-keep public class com.gamater.account.po.**{*;}
+
+-keep public class com.gamater.payment.mol.AcGameMOLPay
+
+-keep public class com.gamater.payment.mol.AcGameMOLPay {
+	public static <fields>;
+    public <methods>;
+}
+
+-keep public class com.gamater.payment.mol.AcGameMolPayListener {
+	public <methods>;
+}
+
+-keep public class com.gamater.payment.mol.entity.**{*;}
+
+-keep public class com.gamater.sdk.game.GamaterSDK {
+	public static <fields>;
+    public <methods>;
+}
+
+-keep public class com.gamater.define.CURRENCY {
+    <fields>;
+    <methods>;
+}
+
+-keep public class com.tony.viewinterface.WebInterface {
+	*;
+}
+
+-keep class * extends com.tony.viewinterface.WebInterface {
+	<fields>;
+    <methods>;
+}
+
+-keep class * extends com.vsgm.sdk.libvsgmc.NativeDaemonBase{
+	<fields>;
+	<methods>;
+}
+
+-keep class com.vsgm.sdk.libvsgmc.NativeDaemonBase{
+	*;
+}
+
+-keep public class com.gamater.sdk.game.GamaterSDKListener {
+	public <methods>;
+}
+
+-keep public class com.facebook.**{*;}
+
+-keep public class com.squareup.picasso.**{*;}
+
+-keep public class com.koushikdutta.async.**{*;}
+
+-keep public class com.gamater.account.MobUserManager{*;}
+
+-keep public class com.gamater.util.SqlliteUtil{*;}
+
+-keep public class com.vsgm.sdk.VsgmEncrypt{*;}

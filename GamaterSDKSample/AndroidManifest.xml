@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.gamater.sample"
+    android:versionCode="121"
+    android:versionName="1.2.1" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="23" />
+
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <!-- android:screenOrientation="landscape" -->
+        <activity
+            android:name="com.gamater.sample.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            
+        	android:launchMode="singleTask"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>     
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="com.gamater.sample"/>
+            </intent-filter>
+            <!-- unity project need add -->
+            <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="true"/>
+        </activity>
+        
+        <!-- kochava 统计 app_guid -->
+        <meta-data android:name="my_kochava_app_guid"
+        	android:value="kogamatersdkdemo-jnq0" />
+        <!-- Google登录  统计 client_id -->
+        <meta-data android:name="gamater_google_client_id"
+        	android:value="719096250746-jvl56j4begch4qdl1cqf15u3jare7ijo.apps.googleusercontent.com" />
+        
+        
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+                
+        <activity android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+                 
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        
+        <activity android:name="com.vsgm.sdk.SDKActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        
+        <activity
+            android:name="com.gamater.sdk.game.MVMainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        	<intent-filter>
+       			<action android:name="android.intent.action.MAIN" />
+ 			</intent-filter>
+        </activity>
+        
+        <receiver
+            android:name="com.gamater.receiver.MasterReferrerReceiver"
+			android:exported="true">
+			<intent-filter>
+				<action android:name="com.android.vending.INSTALL_REFERRER" />
+			</intent-filter>
+		</receiver>
+        
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="gcm.play.android.samples.com.gcmquickstart" />
+            </intent-filter>
+        </receiver>
+        
+		  	
+    </application>
+
+</manifest>
